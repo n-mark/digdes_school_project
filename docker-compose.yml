@@ -6,14 +6,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
-    depends_on:
-      - db
-
-  db:
-    image: postgres
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: digdes-school-proj
-    ports:
-      - 5432:5432
+#    depends_on:
+#      - db
+#
+#  db:
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: user
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: digdes-school-proj
+#    ports:
+#      - 5432:5432
