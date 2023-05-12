@@ -9,14 +9,13 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>app-module</module>
-        <module>module00-security</module>
-        <module>module01-controller</module>
-        <module>module02-service</module>
-        <module>module03-model</module>
-        <module>module04-dto</module>
-        <module>module05-dao</module>
-        <module>module06-emailSender</module>
+        <module>app</module>
+        <module>controller</module>
+        <module>service</module>
+        <module>model</module>
+        <module>dto</module>
+        <module>dao</module>
+        <module>emailSender</module>
     </modules>
 
     <properties>

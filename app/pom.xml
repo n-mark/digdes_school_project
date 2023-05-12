@@ -9,9 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>module05-dao</artifactId>
+    <artifactId>app</artifactId>
     <packaging>jar</packaging>
-
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
@@ -22,9 +21,29 @@
     <dependencies>
         <dependency>
             <groupId>ru.digdes.school</groupId>
-            <artifactId>module03-model</artifactId>
+            <artifactId>controller</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>ru.digdes.school.app.Launch</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>
