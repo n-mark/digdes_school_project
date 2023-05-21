@@ -11,22 +11,37 @@ public class EmployeeController {
     CommonService<EmployeeDto> employeeService = new EmployeeServiceImpl();
 
     public void create(EmployeeDto employeeDto) {
-        employeeService.create(employeeDto);
+        System.out.println("Created");
+        display(employeeService.create(employeeDto));
     }
 
     public void update(EmployeeDto employeeDto) {
-        employeeService.update(employeeDto);
+        System.out.println("Updated");
+        display(employeeService.update(employeeDto));
     }
 
-    public List<EmployeeDto> getAll() {
-        return employeeService.getAll();
+    public void getAll() {
+        System.out.println("Retrieved all");
+        employeeService.getAll().forEach(System.out::println);
     }
 
-    public EmployeeDto getOne(Long id) {
-        return employeeService.getOne(id);
+    public void getOne(Long id) {
+        System.out.println("Retrieved one");
+        display(employeeService.getOne(id));
     }
 
     public void delete(Long id) {
+        System.out.println("Deleted");
         employeeService.delete(id);
+    }
+
+    public void searchEmployeesAndTasks(String request) {
+        System.out.println("Found");
+        ((EmployeeServiceImpl) employeeService).searchEmployeesAndTasks(request)
+                .forEach(System.out::println);
+    }
+
+    private void display(Object o) {
+        System.out.println(o);
     }
 }
