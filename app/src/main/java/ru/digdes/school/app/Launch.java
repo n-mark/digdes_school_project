@@ -7,6 +7,7 @@ public class Launch {
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();
 
+
         EmployeeDto employeeDto = EmployeeDto.builder()
                 .name("John")
                 .lastName("Travolta")
@@ -24,22 +25,20 @@ public class Launch {
                 .lastName("Willis")
                 .build();
         employeeController.create(employeeDto3);
-
+//
         EmployeeDto employeeDto4 = EmployeeDto.builder()
                 .id(3L)
-                .name("Брюс")
                 .position("SENIOR")
+                .jobTitle("SOFTWARE_DEVELOPER")
                 .build();
         employeeController.update(employeeDto4);
 
         employeeController.getAll();
 
-        employeeController.getOne(10L);
-
         employeeController.delete(4L);
 
-        employeeController.searchEmployeesAndTasks("Nullam varius");
-        employeeController.searchEmployeesAndTasks("Брюс");
+        employeeController.searchEmployeesAndTasks("Duis");
+        employeeController.searchEmployeesAndTasks("Br");
 
     }
 }

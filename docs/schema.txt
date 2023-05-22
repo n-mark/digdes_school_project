@@ -3,6 +3,7 @@
 '!' - обязательное поле
 '%' - уникальное значение
 '<-' - внешний ключ
+'*' - ограничения
 
 'employee' - сотрудники компании
     
@@ -10,15 +11,15 @@
 !     'last_name' - фамилия                   varchar(255)
 !     'name' - имя                            varchar(255)
       'middle_name' - отчество                varchar(255)
-      'position' - позиция сотрудника         integer(0-4) *
-      'job_title' - должность                 integer(0-3) **
+      'position' - позиция сотрудника         varchar(255) *
+      'job_title' - должность                 varchar(255) **
     % 'account' - учетная запись              varchar(255)
       'email' - адрес электронной почты       varchar(255)
-      'status' - статус проекта               integer(0, 1) ***
+      'status' - статус проекта               varchar(255) ***
 _________________________________________________________________
-*   0 - 'INTERN', 1 - 'JUNIOR', 2 - 'MIDDLE', 3 - 'SENIOR', 4 - 'CHIEF'
-**  0 - 'ACCOUNTANT', 1 - 'MANAGER', 2 - 'SOFTWARE_DEVELOPER', 3 - 'TESTER'
-*** 0 - 'ACTIVE', 1 - 'DELETED'
+*   'INTERN', 'JUNIOR', 'MIDDLE', 'SENIOR', 'CHIEF'
+**  'ACCOUNTANT', 'MANAGER', 'SOFTWARE_DEVELOPER', 'TESTER'
+*** 'ACTIVE', 'DELETED'
 
 
 'task' - задачи
@@ -29,12 +30,12 @@ _________________________________________________________________
 <-    'responsible_id' - исполнитель задачи                          bigint
 !     'amount_of_hours_needed' - кол-во часов на выполнение          integer
 !     'deadline' - крайний срок выполнения задачи                    timestamp
-      'task_status' - состояние задачи                               integer(0-3) *
+      'task_status' - состояние задачи                               varchar(255) *
 <-    'created_by_id' - автор задачи                                 bigint
       'created_when' - дата когда задача была создана                timestamp
-      'last_modified_when' - дата последнего редактирования задачи   timestamp
+      'last_modified_when' - дата последнего редактирования задачи    timestamp
 __________________________________________________________________
-* 0 - 'NEW', 1 - 'IN_WORK', 2 - 'FINISHED', 3 - 'CLOSED'
+* 'NEW', 'IN_WORK', 'FINISHED', 'CLOSED'
 
 
 'task_dependency' - зависимые задачи
@@ -50,9 +51,9 @@ __________________________________________________________________
 ! | % 'project_code' - уникальный идентификатор проекта     varchar(255)
 !     'project_name' - краткое наименование проекта         varchar(255)
       'description' - детальная информация о проекте        varchar(255)
-      'project_status' - состояние проекта                  integer (0-3) *
+      'project_status' - состояние проекта                  varchar(255) *
 __________________________________________________________________
-* 0 - 'DRAFT', 1 - 'IN_WORK', 2 - 'TESTING', 3 - 'COMPLETED'
+* 'DRAFT', 'IN_WORK', 'TESTING', 'COMPLETED'
 
 
 'project_employee_role' - сотрудники 
@@ -60,7 +61,7 @@ __________________________________________________________________
 ! | % 'id' - идентификатор записи               bigint
 <-    'project_id' - проект                     bigint
 <-    'employee_id' - сотрудник на проекте      bigint
-      'role' - роль сотрудника на проекте       integer(0-3) *
+      'role' - роль сотрудника на проекте       varchar(255) *
 __________________________________________________________________
-* 0 - 'CHIEF', 1 - 'ANALYST', 2 - 'DEVELOPER', 3 - 'TESTER'
+* 'CHIEF', 'ANALYST', 'DEVELOPER', 'TESTER'
 

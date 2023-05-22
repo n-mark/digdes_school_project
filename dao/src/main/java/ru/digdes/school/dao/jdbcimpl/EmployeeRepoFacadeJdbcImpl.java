@@ -150,11 +150,11 @@ public class EmployeeRepoFacadeJdbcImpl implements RepositoryFacade<Employee> {
                     .lastName(resultSet.getString(2))
                     .name(resultSet.getString(3))
                     .middleName(resultSet.getString(4))
-                    .position(Position.values()[resultSet.getInt(5)])
-                    .jobTitle(JobTitle.values()[resultSet.getInt(6)])
+                    .position(resultSet.getString(5) == null ? null : Position.valueOf(resultSet.getString(5)))
+                    .jobTitle(resultSet.getString(6) == null ? null : JobTitle.valueOf(resultSet.getString(6)))
                     .account(resultSet.getString(7))
                     .email(resultSet.getString(8))
-                    .status(EmployeeStatus.values()[resultSet.getInt(9)])
+                    .status(resultSet.getString(9) == null ? null : EmployeeStatus.valueOf(resultSet.getString(9)))
                     .build();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -166,16 +166,11 @@ public class EmployeeRepoFacadeJdbcImpl implements RepositoryFacade<Employee> {
             statement.setString(1, object.getLastName());
             statement.setString(2, object.getName());
             statement.setString(3, object.getMiddleName());
-            /* пока неясна ситуация с возможным null при передаче энамов.
-            JDBC все-равно будет возвращать числовое значение (0) если значение поля null.
-            нужно ли вводить отдельное значение в энамах для подобных случаев?
-            поскольку далее будет работа с JPA, не учитываю этот случай, но если нужно будет,
-            учту */
-            statement.setInt(4, object.getPosition() == null ? 0 : object.getPosition().ordinal());
-            statement.setInt(5, object.getJobTitle() == null ? 0 : object.getJobTitle().ordinal());
+            statement.setString(4, object.getPosition() == null ? null : object.getPosition().name());
+            statement.setString(5, object.getJobTitle() == null ? null : object.getJobTitle().name());
             statement.setString(6, object.getAccount());
             statement.setString(7, object.getEmail());
-            statement.setInt(8, object.getStatus() == null ? 0 : object.getStatus().ordinal());
+            statement.setString(8, EmployeeStatus.ACTIVE.name());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
