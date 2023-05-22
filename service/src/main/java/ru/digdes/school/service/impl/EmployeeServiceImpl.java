@@ -1,8 +1,9 @@
 package ru.digdes.school.service.impl;
 
-import ru.digdes.school.dao.datastorage.RepoFacadeDataStorageImpl;
 import ru.digdes.school.dao.facade.RepositoryFacade;
+import ru.digdes.school.dao.jdbcimpl.EmployeeRepoFacadeJdbcImpl;
 import ru.digdes.school.dto.employee.EmployeeDto;
+import ru.digdes.school.dto.employeetask.EmployeeTaskDto;
 import ru.digdes.school.mapping.impl.EmployeeMapperImpl;
 import ru.digdes.school.mapping.Mapper;
 import ru.digdes.school.model.employee.Employee;
@@ -15,14 +16,17 @@ public class EmployeeServiceImpl implements CommonService<EmployeeDto> {
     private final Mapper<Employee, EmployeeDto> employeeDtoMapper;
 
     public EmployeeServiceImpl() {
-        this.employeeRepository = new RepoFacadeDataStorageImpl<Employee>(Employee.class);
+//        this.employeeRepository = new RepoFacadeDataStorageImpl<Employee>(Employee.class);
+        this.employeeRepository = new EmployeeRepoFacadeJdbcImpl();
         this.employeeDtoMapper = new EmployeeMapperImpl();
     }
 
     @Override
-    public void create(EmployeeDto t) {
+    public EmployeeDto create(EmployeeDto t) {
         Employee employee = employeeDtoMapper.dtoToModel(t);
-        employeeRepository.create(employee);
+        return employeeDtoMapper.modelToDto(
+                employeeRepository.create(employee)
+        );
     }
 
     @Override
@@ -46,5 +50,9 @@ public class EmployeeServiceImpl implements CommonService<EmployeeDto> {
     @Override
     public void delete(Long id) {
         employeeRepository.deleteById(id);
+    }
+
+    public List<EmployeeTaskDto> searchEmployeesAndTasks(String request) {
+        return ((EmployeeRepoFacadeJdbcImpl) employeeRepository).search(request);
     }
 }

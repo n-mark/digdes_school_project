@@ -1,17 +1,17 @@
 package ru.digdes.school.model.team;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.digdes.school.model.employee.Employee;
+import ru.digdes.school.model.project.Project;
 
-
-@Getter
-@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeRole {
+@Getter
+@Setter
+public class ProjectEmployeeRole {
+    private Long id;
+    private Project project;
     private Employee employee;
     private RoleInProject roleInProject;
 }

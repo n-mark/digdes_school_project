@@ -6,6 +6,7 @@ import ru.digdes.school.dto.employee.EmployeeDto;
 public class Launch {
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();
+
         EmployeeDto employeeDto = EmployeeDto.builder()
                 .name("John")
                 .lastName("Travolta")
@@ -24,26 +25,21 @@ public class Launch {
                 .build();
         employeeController.create(employeeDto3);
 
-        EmployeeDto employeeDto5 = EmployeeDto.builder()
-                .id(2L)
-                .name("Дуйн")
-                .lastName("Johnson")
-                .position("CHIEF")
-                .jobTitle("ACCOUNTANT")
-                .build();
-        employeeController.update(employeeDto5);
-
-
         EmployeeDto employeeDto4 = EmployeeDto.builder()
                 .id(3L)
                 .name("Брюс")
+                .position("SENIOR")
                 .build();
         employeeController.update(employeeDto4);
 
         employeeController.getAll();
 
-        employeeController.delete(3L);
+        employeeController.getOne(10L);
 
-        employeeController.getAll();
+        employeeController.delete(4L);
+
+        employeeController.searchEmployeesAndTasks("Nullam varius");
+        employeeController.searchEmployeesAndTasks("Брюс");
+
     }
 }

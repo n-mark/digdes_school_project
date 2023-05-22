@@ -1,0 +1,66 @@
+Таблицы и столбцы:
+
+'!' - обязательное поле
+'%' - уникальное значение
+'<-' - внешний ключ
+
+'employee' - сотрудники компании
+    
+! | % 'id' - идентификатор записи             bigint
+!     'last_name' - фамилия                   varchar(255)
+!     'name' - имя                            varchar(255)
+      'middle_name' - отчество                varchar(255)
+      'position' - позиция сотрудника         integer(0-4) *
+      'job_title' - должность                 integer(0-3) **
+    % 'account' - учетная запись              varchar(255)
+      'email' - адрес электронной почты       varchar(255)
+      'status' - статус проекта               integer(0, 1) ***
+_________________________________________________________________
+*   0 - 'INTERN', 1 - 'JUNIOR', 2 - 'MIDDLE', 3 - 'SENIOR', 4 - 'CHIEF'
+**  0 - 'ACCOUNTANT', 1 - 'MANAGER', 2 - 'SOFTWARE_DEVELOPER', 3 - 'TESTER'
+*** 0 - 'ACTIVE', 1 - 'DELETED'
+
+
+'task' - задачи
+
+! | % 'id' - идентификатор записи                                    bigint
+!     'task_name' - краткое описание задачи                          varchar(255)
+      'description' - детальное описание задачи                      varchar(255)
+<-    'responsible_id' - исполнитель задачи                          bigint
+!     'amount_of_hours_needed' - кол-во часов на выполнение          integer
+!     'deadline' - крайний срок выполнения задачи                    timestamp
+      'task_status' - состояние задачи                               integer(0-3) *
+<-    'created_by_id' - автор задачи                                 bigint
+      'created_when' - дата когда задача была создана                timestamp
+      'last_modified_when' - дата последнего редактирования задачи   timestamp
+__________________________________________________________________
+* 0 - 'NEW', 1 - 'IN_WORK', 2 - 'FINISHED', 3 - 'CLOSED'
+
+
+'task_dependency' - зависимые задачи
+
+<-    'dependent_task_id' - зависимая задача                    bigint
+<-    'depends_on_id' - id задачи, от которой зависит задача    bigint
+                        из поля 'dependent_task_id'
+
+
+'project' - проекты
+
+! | % 'id' - идентификатор записи                           bigint
+! | % 'project_code' - уникальный идентификатор проекта     varchar(255)
+!     'project_name' - краткое наименование проекта         varchar(255)
+      'description' - детальная информация о проекте        varchar(255)
+      'project_status' - состояние проекта                  integer (0-3) *
+__________________________________________________________________
+* 0 - 'DRAFT', 1 - 'IN_WORK', 2 - 'TESTING', 3 - 'COMPLETED'
+
+
+'project_employee_role' - сотрудники 
+
+! | % 'id' - идентификатор записи               bigint
+<-    'project_id' - проект                     bigint
+<-    'employee_id' - сотрудник на проекте      bigint
+      'role' - роль сотрудника на проекте       integer(0-3) *
+__________________________________________________________________
+* 0 - 'CHIEF', 1 - 'ANALYST', 2 - 'DEVELOPER', 3 - 'TESTER'
+
