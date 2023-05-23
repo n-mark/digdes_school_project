@@ -1,6 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 1684679898194-1
+    id: 1684758910822-1
     author: user (generated)
     changes:
     - createTable:
@@ -12,6 +12,7 @@ databaseChangeLog:
               primaryKey: true
               primaryKeyName: pk_employee
             name: id
+            startWith: 16
             type: BIGINT
         - column:
             constraints:
@@ -28,10 +29,10 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: position
-            type: INTEGER
+            type: VARCHAR(255)
         - column:
             name: job_title
-            type: INTEGER
+            type: VARCHAR(255)
         - column:
             name: account
             type: VARCHAR(255)
@@ -42,10 +43,10 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: status
-            type: INTEGER
+            type: VARCHAR(255)
         tableName: employee
 - changeSet:
-    id: 1684679898194-2
+    id: 1684758910822-2
     author: user (generated)
     changes:
     - createTable:
@@ -57,6 +58,7 @@ databaseChangeLog:
               primaryKey: true
               primaryKeyName: pk_task
             name: id
+            startWith: 6
             type: BIGINT
         - column:
             constraints:
@@ -81,7 +83,7 @@ databaseChangeLog:
             type: TIMESTAMP WITHOUT TIME ZONE
         - column:
             name: task_status
-            type: INTEGER
+            type: VARCHAR(255)
         - column:
             name: created_by_id
             type: BIGINT
@@ -93,7 +95,7 @@ databaseChangeLog:
             type: TIMESTAMP WITHOUT TIME ZONE
         tableName: task
 - changeSet:
-    id: 1684679898194-3
+    id: 1684758910822-3
     author: user (generated)
     changes:
     - createTable:
@@ -109,7 +111,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: task_dependency
 - changeSet:
-    id: 1684679898194-4
+    id: 1684758910822-4
     author: user (generated)
     changes:
     - createTable:
@@ -121,6 +123,7 @@ databaseChangeLog:
               primaryKey: true
               primaryKeyName: pk_project
             name: id
+            startWith: 6
             type: BIGINT
         - column:
             constraints:
@@ -139,10 +142,10 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: project_status
-            type: INTEGER
+            type: VARCHAR(255)
         tableName: project
 - changeSet:
-    id: 1684679898194-5
+    id: 1684758910822-5
     author: user (generated)
     changes:
     - createTable:
@@ -154,6 +157,7 @@ databaseChangeLog:
               primaryKey: true
               primaryKeyName: pk_project_employee_role
             name: id
+            startWith: 6
             type: BIGINT
         - column:
             name: project_id
@@ -163,10 +167,10 @@ databaseChangeLog:
             type: BIGINT
         - column:
             name: role
-            type: INTEGER
+            type: VARCHAR(255)
         tableName: project_employee_role
 - changeSet:
-    id: 1684679898194-6
+    id: 1684758910822-6
     author: user (generated)
     changes:
     - addUniqueConstraint:
@@ -174,7 +178,7 @@ databaseChangeLog:
         constraintName: verify_account
         tableName: employee
 - changeSet:
-    id: 1684679898194-7
+    id: 1684758910822-7
     author: user (generated)
     changes:
     - addUniqueConstraint:
@@ -182,7 +186,7 @@ databaseChangeLog:
         constraintName: task_dep_constraint
         tableName: task_dependency
 - changeSet:
-    id: 1684679898194-8
+    id: 1684758910822-8
     author: user (generated)
     changes:
     - addUniqueConstraint:
@@ -190,7 +194,7 @@ databaseChangeLog:
         constraintName: proj_code
         tableName: project
 - changeSet:
-    id: 1684679898194-9
+    id: 1684758910822-9
     author: user (generated)
     changes:
     - addUniqueConstraint:
@@ -198,7 +202,7 @@ databaseChangeLog:
         constraintName: proj_empl_constraint
         tableName: project_employee_role
 - changeSet:
-    id: 1684679898194-10
+    id: 1684758910822-10
     author: user (generated)
     changes:
     - addForeignKeyConstraint:
@@ -213,7 +217,7 @@ databaseChangeLog:
         referencedTableName: task
         validate: true
 - changeSet:
-    id: 1684679898194-11
+    id: 1684758910822-11
     author: user (generated)
     changes:
     - addForeignKeyConstraint:
@@ -228,7 +232,7 @@ databaseChangeLog:
         referencedTableName: task
         validate: true
 - changeSet:
-    id: 1684679898194-12
+    id: 1684758910822-12
     author: user (generated)
     changes:
     - addForeignKeyConstraint:
@@ -243,7 +247,7 @@ databaseChangeLog:
         referencedTableName: employee
         validate: true
 - changeSet:
-    id: 1684679898194-13
+    id: 1684758910822-13
     author: user (generated)
     changes:
     - addForeignKeyConstraint:
@@ -258,7 +262,7 @@ databaseChangeLog:
         referencedTableName: project
         validate: true
 - changeSet:
-    id: 1684679898194-14
+    id: 1684758910822-14
     author: user (generated)
     changes:
     - addForeignKeyConstraint:
@@ -273,7 +277,7 @@ databaseChangeLog:
         referencedTableName: employee
         validate: true
 - changeSet:
-    id: 1684679898194-15
+    id: 1684758910822-15
     author: user (generated)
     changes:
     - addForeignKeyConstraint:
