@@ -1,44 +1,17 @@
 package ru.digdes.school.app;
 
-import ru.digdes.school.controller.EmployeeController;
-import ru.digdes.school.dto.employee.EmployeeDto;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+@SpringBootApplication
+@EnableJpaRepositories(basePackages = {"ru"})
+@EntityScan(basePackages = {"ru"})
+@ComponentScan(basePackages = {"ru"})
 public class Launch {
     public static void main(String[] args) {
-        EmployeeController employeeController = new EmployeeController();
-
-
-        EmployeeDto employeeDto = EmployeeDto.builder()
-                .name("John")
-                .lastName("Travolta")
-                .build();
-        employeeController.create(employeeDto);
-
-        EmployeeDto employeeDto2 = EmployeeDto.builder()
-                .name("Dwayne")
-                .lastName("Johnson")
-                .build();
-        employeeController.create(employeeDto2);
-
-        EmployeeDto employeeDto3 = EmployeeDto.builder()
-                .name("Bruce")
-                .lastName("Willis")
-                .build();
-        employeeController.create(employeeDto3);
-//
-        EmployeeDto employeeDto4 = EmployeeDto.builder()
-                .id(3L)
-                .position("SENIOR")
-                .jobTitle("SOFTWARE_DEVELOPER")
-                .build();
-        employeeController.update(employeeDto4);
-
-        employeeController.getAll();
-
-        employeeController.delete(4L);
-
-        employeeController.searchEmployeesAndTasks("Duis");
-        employeeController.searchEmployeesAndTasks("Br");
-
+        SpringApplication.run(Launch.class, args);
     }
 }

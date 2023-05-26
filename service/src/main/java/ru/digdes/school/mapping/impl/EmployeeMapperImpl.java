@@ -1,11 +1,13 @@
 package ru.digdes.school.mapping.impl;
 
+import org.springframework.stereotype.Component;
 import ru.digdes.school.dto.employee.EmployeeDto;
 import ru.digdes.school.mapping.Mapper;
 import ru.digdes.school.model.employee.Employee;
 import ru.digdes.school.model.employee.JobTitle;
 import ru.digdes.school.model.employee.Position;
 
+@Component
 public class EmployeeMapperImpl implements Mapper<Employee, EmployeeDto> {
     @Override
     public EmployeeDto modelToDto(Employee employee) {
@@ -35,5 +37,14 @@ public class EmployeeMapperImpl implements Mapper<Employee, EmployeeDto> {
                 .build();
     }
 
-
+    @Override
+    public void updateMerge(Employee employee, EmployeeDto employeeDto) {
+        employee.setLastName(employeeDto.getLastName() == null ? employee.getLastName() : employeeDto.getLastName());
+        employee.setName(employeeDto.getName() == null ? employee.getName() : employeeDto.getName());
+        employee.setMiddleName(employeeDto.getMiddleName() == null ? employee.getMiddleName() : employeeDto.getMiddleName());
+        employee.setPosition(employeeDto.getPosition() == null ? employee.getPosition() : Position.valueOf(employeeDto.getPosition()));
+        employee.setJobTitle(employeeDto.getJobTitle() == null ? employee.getJobTitle() : JobTitle.valueOf(employeeDto.getJobTitle()));
+        employee.setAccount(employeeDto.getAccount() == null ? employee.getAccount() : employeeDto.getAccount());
+        employee.setEmail(employeeDto.getEmail() == null ? employee.getEmail() : employeeDto.getEmail());
+    }
 }
