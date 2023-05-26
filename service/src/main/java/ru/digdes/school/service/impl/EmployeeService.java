@@ -58,6 +58,12 @@ public class EmployeeService {
                 .collect(Collectors.toList());
     }
 
+    public List<EmployeeDto> getAll() {
+        return employeeRepository.findAll().stream()
+                .map(mapper::modelToDto)
+                .collect(Collectors.toList());
+    }
+
     public EmployeeDto updateEmployee(EmployeeDto employeeDto) throws IllegalAccessException {
         if (!employeeRepository.existsById(employeeDto.getId())) {
             throw new EntityNotFoundException("An employee with id = " + employeeDto.getId() + " doesn't exist");

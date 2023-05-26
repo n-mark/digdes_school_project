@@ -29,9 +29,8 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmployeeDto> getAll() {
-        System.out.println("getAll employee called");
-        return null;
+    public ResponseEntity<List<EmployeeDto>> getAll() {
+        return ResponseEntity.ok(employeeService.getAll());
     }
 
     @GetMapping(params = {"id"})
