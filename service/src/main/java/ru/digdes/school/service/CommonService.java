@@ -2,10 +2,11 @@ package ru.digdes.school.service;
 
 import java.util.List;
 
-public interface CommonService<T> {
-    T create(T t);
-    T getOne(Long id);
-    List<T> getAll();
+public interface CommonService<T, U> {
+    U create(T t);
     T update(T t);
+    List<T> search();
+
+    List<T> getAll();
     void delete(Long id);
 }

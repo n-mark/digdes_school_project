@@ -2,12 +2,10 @@ package ru.digdes.school.dao.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import ru.digdes.school.model.employee.Employee;
 
 import java.util.List;
 
-@Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     boolean existsByAccount(String account);
 
