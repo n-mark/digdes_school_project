@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.digdes.school.model.project.Project;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -30,5 +32,5 @@ public class Employee {
     private EmployeeStatus status;
     @ManyToMany(mappedBy = "team")
     @ToString.Exclude
-    private Set<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 }

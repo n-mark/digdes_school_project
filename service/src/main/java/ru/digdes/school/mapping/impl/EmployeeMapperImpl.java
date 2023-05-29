@@ -16,8 +16,8 @@ public class EmployeeMapperImpl implements Mapper<Employee, EmployeeDto> {
                 .lastName(employee.getLastName())
                 .name(employee.getName())
                 .middleName(employee.getMiddleName())
-                .position(employee.getPosition() == null ? null : employee.getPosition().getPositionAsString())
-                .jobTitle(employee.getJobTitle() == null ? null : employee.getJobTitle().getJobTitleAsString())
+                .position(employee.getPosition() == null ? null : employee.getPosition())
+                .jobTitle(employee.getJobTitle() == null ? null : employee.getJobTitle())
                 .account(employee.getAccount())
                 .email(employee.getEmail())
                 .build();
@@ -30,8 +30,8 @@ public class EmployeeMapperImpl implements Mapper<Employee, EmployeeDto> {
                 .lastName(employeeDto.getLastName())
                 .name(employeeDto.getName())
                 .middleName(employeeDto.getMiddleName())
-                .position(employeeDto.getPosition() == null ? null : Position.valueOf(employeeDto.getPosition()))
-                .jobTitle(employeeDto.getJobTitle() == null ? null : JobTitle.valueOf(employeeDto.getJobTitle()))
+                .position(employeeDto.getPosition() == null ? null : employeeDto.getPosition())
+                .jobTitle(employeeDto.getJobTitle() == null ? null : employeeDto.getJobTitle())
                 .account(employeeDto.getAccount())
                 .email(employeeDto.getEmail())
                 .build();
@@ -42,8 +42,8 @@ public class EmployeeMapperImpl implements Mapper<Employee, EmployeeDto> {
         employee.setLastName(employeeDto.getLastName() == null ? employee.getLastName() : employeeDto.getLastName());
         employee.setName(employeeDto.getName() == null ? employee.getName() : employeeDto.getName());
         employee.setMiddleName(employeeDto.getMiddleName() == null ? employee.getMiddleName() : employeeDto.getMiddleName());
-        employee.setPosition(employeeDto.getPosition() == null ? employee.getPosition() : Position.valueOf(employeeDto.getPosition()));
-        employee.setJobTitle(employeeDto.getJobTitle() == null ? employee.getJobTitle() : JobTitle.valueOf(employeeDto.getJobTitle()));
+        employee.setPosition(employeeDto.getPosition() == null ? employee.getPosition() : employeeDto.getPosition());
+        employee.setJobTitle(employeeDto.getJobTitle() == null ? employee.getJobTitle() : employeeDto.getJobTitle());
         employee.setAccount(employeeDto.getAccount() == null ? employee.getAccount() : employeeDto.getAccount());
         employee.setEmail(employeeDto.getEmail() == null ? employee.getEmail() : employeeDto.getEmail());
     }
