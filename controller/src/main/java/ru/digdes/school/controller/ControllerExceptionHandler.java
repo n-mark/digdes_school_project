@@ -1,4 +1,4 @@
-package ru.digdes.school.exception;
+package ru.digdes.school.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.NativeWebRequest;
 import ru.digdes.school.dto.exception.ExceptionDto;
+import ru.digdes.school.exception.EmployeeDeletedException;
 
 import java.util.Date;
 
@@ -35,6 +36,21 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler({EntityNotFoundException.class, IllegalArgumentException.class})
     public ResponseEntity<ExceptionDto> badRequestHandler(Exception e, NativeWebRequest request) {
+        HttpServletRequest httpServletRequest = request.getNativeRequest(HttpServletRequest.class);
+        String httpMethod = httpServletRequest.getMethod();
+        logger.error(httpMethod + " | " + request.getDescription(false) + " : " + e.getMessage());
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .message(e.getMessage())
+                .timestamp(new Date())
+                .description(httpMethod + " " + request.getDescription(false))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
+    }
+
+    @ExceptionHandler(EmployeeDeletedException.class)
+    public ResponseEntity<ExceptionDto> deletedEmployeeHandler(EmployeeDeletedException e, NativeWebRequest request) {
         HttpServletRequest httpServletRequest = request.getNativeRequest(HttpServletRequest.class);
         String httpMethod = httpServletRequest.getMethod();
         logger.error(httpMethod + " | " + request.getDescription(false) + " : " + e.getMessage());

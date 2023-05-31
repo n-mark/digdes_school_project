@@ -1,5 +1,7 @@
 package ru.digdes.school.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import ru.digdes.school.dto.employee.EmployeePaging;
 import ru.digdes.school.service.BasicService;
 import ru.digdes.school.service.GetService;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -21,46 +24,44 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
+    @Operation(description = "Создать сотрудника")
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(employeeService.create(employeeDto));
     }
 
-    @GetMapping
+    @GetMapping("/search")
+    @Operation(description = "Найти сотрудников")
     public ResponseEntity<Page<EmployeeDto>> search(EmployeePaging employeePaging,
                                                     EmployeeFilterObject employeeFilterObject) {
         return ResponseEntity.ok(employeeService.search(employeePaging, employeeFilterObject));
     }
 
-    @GetMapping(params = {"id"})
-    public ResponseEntity<EmployeeDto> getById(@RequestParam(value = "id") Long id) {
+
+    @GetMapping("/id/{id}")
+    @Operation(description = "Получить сотрудника по идентификатору")
+    public ResponseEntity<EmployeeDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(((GetService<EmployeeDto>) employeeService).getOneById(id));
     }
 
-    @GetMapping(params = {"account"})
-    public ResponseEntity<EmployeeDto> getByAccount(@RequestParam(value = "account") String account) {
+
+    @GetMapping("/account/{account}")
+    @Operation(description = "Получить сотрудника по УЗ")
+    public ResponseEntity<EmployeeDto> getByAccount(@PathVariable String account) {
         return ResponseEntity.ok(((GetService<EmployeeDto>) employeeService).getOneByStringValue(account));
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDto employeeDto) {
-        try {
+    @Operation(description = "Изменить данные сотрудника")
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeDto employeeDto) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(employeeService.update(employeeDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteEmployee(DeleteEmployeeDto deleteEmployeeDto) {
-        try {
+    @Operation(description = "Перевести сотрудника в статус 'Удалён'")
+    public ResponseEntity<String> deleteEmployee(DeleteEmployeeDto deleteEmployeeDto) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(employeeService.changeState(deleteEmployeeDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
     }
 }

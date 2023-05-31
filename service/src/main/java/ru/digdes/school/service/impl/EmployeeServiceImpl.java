@@ -16,6 +16,7 @@ import ru.digdes.school.dto.Stateable;
 import ru.digdes.school.dto.employee.DeleteEmployeeDto;
 import ru.digdes.school.dto.employee.EmployeeDto;
 import ru.digdes.school.dto.employee.EmployeeFilterObject;
+import ru.digdes.school.exception.EmployeeDeletedException;
 import ru.digdes.school.mapping.Mapper;
 import ru.digdes.school.model.employee.Employee;
 import ru.digdes.school.model.employee.EmployeeStatus;
@@ -86,6 +87,10 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
             throw new EntityNotFoundException("An employee with id = " + deleteEmployeeDto.getId() + " doesn't exist");
         }
         Employee employee = employeeRepository.getReferenceById(deleteEmployeeDto.getId());
+        if (employee.getStatus().equals(EmployeeStatus.DELETED)) {
+            throw new EmployeeDeletedException("The employee with id = " + deleteEmployeeDto.getId()
+                    + " status is already 'DELETED'");
+        }
         employee.setStatus(EmployeeStatus.DELETED);
         employeeRepository.save(employee);
         return "The employee with id = " + deleteEmployeeDto.getId() + " status has been set to 'DELETED'";
@@ -97,6 +102,10 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
             throw new EntityNotFoundException("An employee with id = " + id + " doesn't exist");
         }
         Employee employee = employeeRepository.getReferenceById(id);
+        if (employee.getStatus().equals(EmployeeStatus.DELETED)) {
+            throw new EmployeeDeletedException("The employee " + mapper.modelToDto(employee) +
+                    " status is 'DELETED'");
+        }
         return mapper.modelToDto(employee);
     }
 
@@ -106,6 +115,10 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
             throw new EntityNotFoundException("An employee with account '" + value + "' doesn't exist");
         }
         Employee employee = employeeRepository.getEmployeeByAccount(value);
+        if (employee.getStatus().equals(EmployeeStatus.DELETED)) {
+            throw new EmployeeDeletedException("The employee " + mapper.modelToDto(employee) +
+                    " status is 'DELETED'");
+        }
         return mapper.modelToDto(employee);
     }
 

@@ -1,0 +1,428 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Система управления проектами",
+    "version": "v0.1.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Для приложения запущенного локально"
+    },
+    {
+      "url": "http://db:8080",
+      "description": "Для работы из Docker container"
+    }
+  ],
+  "paths": {
+    "/employees": {
+      "post": {
+        "summary": "Создать профиль сотрудника",
+        "tags": [
+          "Сотрудник"
+        ],
+        "description": "Поле \"id\" генерируется автоматически на стороне базы данных и будет проигнорировано.",
+        "operationId": "createEmployee",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Измененить данные сотрудника",
+        "tags": [
+          "Сотрудник"
+        ],
+        "description": "Поле \"id\" не подлежит изменению и будет проигнорировано.",
+        "operationId": "updateEmployee",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Удалить сотрудника",
+        "tags": [
+          "Сотрудник"
+        ],
+        "description": "Перевести сотрудника в статус 'Удалён'",
+        "operationId": "deleteEmployee",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Идентификатор удаляемого сотрудника"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees/search": {
+      "get": {
+        "summary": "Поиск сотрудников",
+        "tags": [
+          "Сотрудник"
+        ],
+        "description": "Найти сотрудников. Поиск будет осуществлен с конъюнкцией по всем переданным в строке значениям. Каждое значение будет проверяться на частичное соответствие ('%значение%') без учета регистра. Также можно использовать данный эндпоинт для получения всех сотрудников, если передать пустую строку запроса. Отображаются только сотрудники со статусом \"Активный\". По умолчанию список отсортирован по фамилии ('lastName') в порядке возрастания.",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Строка поиска"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Номер страницы для отображения при пагинации"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Количество элементов на странице"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            },
+            "description": "Порядок сортировки"
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Поле для сортировки (id, lastName, name, middleName, account, email)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageEmployeeDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees/id/{id}": {
+      "get": {
+        "summary": "Получение сотрудника по идентификатору профиля",
+        "tags": [
+          "Сотрудник"
+        ],
+        "operationId": "getById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees/account/{account}": {
+      "get": {
+        "summary": "Получение сотрудника по УЗ",
+        "tags": [
+          "Сотрудник"
+        ],
+        "operationId": "getByAccount",
+        "parameters": [
+          {
+            "name": "account",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EmployeeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Идентификатор сотрудника",
+            "format": "int64"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия. Обязательное поле"
+          },
+          "name": {
+            "type": "string",
+            "description": "Имя. Обязательное поле"
+          },
+          "middleName": {
+            "type": "string",
+            "description": "Отчество"
+          },
+          "position": {
+            "type": "string",
+            "description": "Позиция",
+            "enum": [
+              "INTERN",
+              "JUNIOR",
+              "MIDDLE",
+              "SENIOR",
+              "CHIEF"
+            ]
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "Должность",
+            "enum": [
+              "ACCOUNTANT",
+              "MANAGER",
+              "SOFTWARE_DEVELOPER",
+              "TESTER"
+            ]
+          },
+          "account": {
+            "type": "string",
+            "description": "Учетная запись. Уникальное значение"
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта"
+          }
+        }
+      },
+      "EmployeePaging": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "ASC",
+              "DESC"
+            ]
+          },
+          "sortBy": {
+            "type": "string"
+          }
+        }
+      },
+      "EmployeeFilterObject": {
+        "type": "object",
+        "properties": {
+          "searchString": {
+            "type": "string"
+          }
+        }
+      },
+      "PageEmployeeDto": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EmployeeDto"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DeleteEmployeeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    }
+  }
+}
