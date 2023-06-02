@@ -7,9 +7,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = {"ru"})
-@EntityScan(basePackages = {"ru"})
-@ComponentScan(basePackages = {"ru"})
+@EnableJpaRepositories(basePackages = {"ru.digdes.school.dao"})
+@EntityScan(basePackages = {"ru.digdes.school.model"})
+@ComponentScan(basePackages = {"ru.digdes.school"})
 public class Launch {
     public static void main(String[] args) {
         SpringApplication.run(Launch.class, args);

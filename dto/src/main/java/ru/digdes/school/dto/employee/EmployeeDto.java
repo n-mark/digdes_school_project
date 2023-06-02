@@ -1,6 +1,8 @@
 package ru.digdes.school.dto.employee;
 
 import lombok.*;
+import ru.digdes.school.model.employee.JobTitle;
+import ru.digdes.school.model.employee.Position;
 
 @Getter
 @Setter
@@ -13,8 +15,8 @@ public class EmployeeDto {
     private String lastName;
     private String name;
     private String middleName;
-    private String position;
-    private String jobTitle;
+    private Position position;
+    private JobTitle jobTitle;
     private String account;
     private String email;
 }
