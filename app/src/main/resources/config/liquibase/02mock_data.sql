@@ -1,10 +1,10 @@
 -- create employees
 
-INSERT INTO employee (last_name, name, middle_name, position, job_title, account, email, status) VALUES ('Dictus', 'Kathe', 'Hadrian', 'SENIOR', 'MANAGER', 'hdictus0', 'hdictus0@archive.org', 'ACTIVE');
-INSERT INTO employee (last_name, name, middle_name, position, job_title, account, email, status) VALUES ('Damiral', 'Cristiano', 'Jeramey', 'MIDDLE', 'MANAGER', 'jdamiral1', 'jdamiral1@cisco.com', 'ACTIVE');
-INSERT INTO employee (last_name, name, middle_name, position, job_title, account, email, status) VALUES ('Billings', 'Englebert', 'Orbadiah', 'JUNIOR', 'TESTER', 'obillings4', 'obillings4@diigo.com', 'ACTIVE');
-INSERT INTO employee (last_name, name, middle_name, position, job_title, account, email, status) VALUES ('Boar', 'Zelig', 'Wat', 'INTERN', 'ACCOUNTANT', 'wboar5', 'wboar5@baidu.com', 'ACTIVE');
-INSERT INTO employee (last_name, name, middle_name, position, job_title, account, email, status) VALUES ('Cuningham', 'Letta', 'Brit', 'INTERN', 'ACCOUNTANT', 'bcuningham6', 'bcuningham6@a8.net', 'ACTIVE');
+INSERT INTO employee (last_name, name, middle_name, position, job_title, email, status) VALUES ('Dictus', 'Kathe', 'Hadrian', 'SENIOR', 'MANAGER', 'hdictus0@archive.org', 'ACTIVE');
+INSERT INTO employee (last_name, name, middle_name, position, job_title, email, status) VALUES ('Damiral', 'Cristiano', 'Jeramey', 'MIDDLE', 'MANAGER', 'jdamiral1@cisco.com', 'ACTIVE');
+INSERT INTO employee (last_name, name, middle_name, position, job_title, email, status) VALUES ('Billings', 'Englebert', 'Orbadiah', 'JUNIOR', 'TESTER', 'obillings4@diigo.com', 'ACTIVE');
+INSERT INTO employee (last_name, name, middle_name, position, job_title, email, status) VALUES ('Boar', 'Zelig', 'Wat', 'INTERN', 'ACCOUNTANT', 'wboar5@baidu.com', 'ACTIVE');
+INSERT INTO employee (last_name, name, middle_name, position, job_title, email, status) VALUES ('Cuningham', 'Letta', 'Brit', 'INTERN', 'ACCOUNTANT', 'bcuningham6@a8.net', 'ACTIVE');
 
 
 

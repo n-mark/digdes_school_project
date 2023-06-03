@@ -28,7 +28,7 @@ public class EmployeeDto {
     private JobTitle jobTitle;
     @Schema(description = "Учетная запись. Уникальное значение")
     private String account;
-    @Schema(description = "Электронная почта")
+    @Schema(description = "Электронная почта. Уникальное значение")
     @Email
     private String email;
 }

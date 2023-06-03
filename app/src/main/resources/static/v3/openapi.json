@@ -21,7 +21,7 @@
         "tags": [
           "Сотрудник"
         ],
-        "description": "Поле \"id\" генерируется автоматически на стороне базы данных и будет проигнорировано.",
+        "description": "Поле \"id\" генерируется автоматически на стороне базы данных и будет проигнорировано. Доступно только администраторам",
         "operationId": "createEmployee",
         "requestBody": {
           "content": {
@@ -51,7 +51,7 @@
         "tags": [
           "Сотрудник"
         ],
-        "description": "Поле \"id\" не подлежит изменению и будет проигнорировано.",
+        "description": "Доступно только администраторам",
         "operationId": "updateEmployee",
         "requestBody": {
           "content": {
@@ -81,7 +81,7 @@
         "tags": [
           "Сотрудник"
         ],
-        "description": "Перевести сотрудника в статус 'Удалён'",
+        "description": "Перевести сотрудника в статус 'Удалён'. Доступно только администраторам",
         "operationId": "deleteEmployee",
         "parameters": [
           {
@@ -101,6 +101,38 @@
               "*/*": {
                 "schema": {
                   "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees/role": {
+      "patch": {
+        "summary": "Изменить роль сотрудника в системе",
+        "tags": [
+          "Сотрудник"
+        ],
+        "description": "Изменить роль сотрудника в системе. Доступна только администраторам",
+        "operationId": "chahgeSystemRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SystemRolePatchDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemRolePatchDto"
                 }
               }
             }
@@ -242,6 +274,92 @@
           }
         }
       }
+    },
+    "/auth/signup": {
+      "post": {
+        "summary": "Регистрация учетной записи",
+        "tags": [
+          "Аутентификация"
+        ],
+        "description": "На данный момент регистрация реализована следующим образом -  сотрудник может зарегистрировать учетную запись, если администратор добавил его карточку в базу и заполнил поле email. Это поле проверяется на соответствие вводимому при регистрации. Сотруднику будет отказано в регистрации УЗ, если электронная почта, которую он введет при регистрации, не привязана ни к одной учетной записи. УЗ создается с привелегией 'ROLE_USER'. При необходимости роль сотрудника может быть изменена администратором. В дальнейшем необходимо добавить еще и подтверждение в виде отправки ссылки на указанный email.",
+        "operationId": "registerUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signout": {
+      "post": {
+        "summary": "Выход из системы",
+        "tags": [
+          "Аутентификация"
+        ],
+        "description": "Очищает cookie с токеном доступа.",
+        "operationId": "logoutUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "summary": "Вход в систему",
+        "tags": [
+          "Аутентификация"
+        ],
+        "description": "Токен доступа возвращается в виде cookie.",
+        "operationId": "authenticateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -293,7 +411,7 @@
           },
           "email": {
             "type": "string",
-            "description": "Электронная почта"
+            "description": "Электронная почта. Уникальное значение"
           }
         }
       },
@@ -420,6 +538,62 @@
           "id": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "SystemRolePatchDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "roleInSystem": {
+            "type": "string",
+            "enum": [
+              "ROLE_USER",
+              "ROLE_ADMIN"
+            ]
+          }
+        }
+      },
+      "SignupRequest": {
+        "required": [
+          "email",
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "maxLength": 20,
+            "minLength": 3,
+            "type": "string"
+          },
+          "email": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 40,
+            "minLength": 6,
+            "type": "string"
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": [
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
           }
         }
       }
