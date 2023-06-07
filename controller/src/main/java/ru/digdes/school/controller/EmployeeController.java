@@ -1,16 +1,18 @@
 package ru.digdes.school.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.digdes.school.dto.employee.DeleteEmployeeDto;
-import ru.digdes.school.dto.employee.EmployeeDto;
-import ru.digdes.school.dto.employee.EmployeeFilterObject;
-import ru.digdes.school.dto.employee.EmployeePaging;
+import ru.digdes.school.dto.employee.*;
 import ru.digdes.school.service.BasicService;
 import ru.digdes.school.service.GetService;
+import ru.digdes.school.service.impl.EmployeeServiceImpl;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -20,47 +22,56 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    @Operation(description = "Создать сотрудника")
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(employeeService.create(employeeDto));
     }
 
-    @GetMapping
+    @Operation(description = "Найти сотрудников")
+    @GetMapping("/search")
     public ResponseEntity<Page<EmployeeDto>> search(EmployeePaging employeePaging,
                                                     EmployeeFilterObject employeeFilterObject) {
         return ResponseEntity.ok(employeeService.search(employeePaging, employeeFilterObject));
     }
 
-    @GetMapping(params = {"id"})
-    public ResponseEntity<EmployeeDto> getById(@RequestParam(value = "id") Long id) {
+
+    @Operation(description = "Получить сотрудника по идентификатору")
+    @GetMapping("/id/{id}")
+    public ResponseEntity<EmployeeDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(((GetService<EmployeeDto>) employeeService).getOneById(id));
     }
 
-    @GetMapping(params = {"account"})
-    public ResponseEntity<EmployeeDto> getByAccount(@RequestParam(value = "account") String account) {
+
+    @Operation(description = "Получить сотрудника по УЗ")
+    @GetMapping("/account/{account}")
+    public ResponseEntity<EmployeeDto> getByAccount(@PathVariable String account) {
         return ResponseEntity.ok(((GetService<EmployeeDto>) employeeService).getOneByStringValue(account));
     }
 
+    @Operation(description = "Изменить данные сотрудника")
     @PatchMapping
-    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDto employeeDto) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(employeeService.update(employeeDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeDto employeeDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(employeeService.update(employeeDto));
     }
 
+    @Operation(description = "Перевести сотрудника в статус 'Удалён'")
     @DeleteMapping
-    public ResponseEntity<?> deleteEmployee(DeleteEmployeeDto deleteEmployeeDto) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(employeeService.changeState(deleteEmployeeDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteEmployee(DeleteEmployeeDto deleteEmployeeDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(employeeService.changeState(deleteEmployeeDto));
+    }
+
+    @Operation(description = "Изменить роль сотрудника в системе. Доступна только администраторам")
+    @PatchMapping("/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SystemRolePatchDto> chahgeSystemRole(@RequestBody SystemRolePatchDto systemRolePatchDto) {
+        return ResponseEntity.ok(((EmployeeServiceImpl) employeeService)
+                .changeSystemRole(systemRolePatchDto));
     }
 }

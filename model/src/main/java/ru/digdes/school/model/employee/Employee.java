@@ -30,6 +30,9 @@ public class Employee {
     private String email;
     @Enumerated(EnumType.STRING)
     private EmployeeStatus status;
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private RoleInSystem roleInSystem;
     @ManyToMany(mappedBy = "team")
     @ToString.Exclude
     private List<Project> projects = new ArrayList<>();
