@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.digdes.school.dto.CanBePaged;
+import ru.digdes.school.dto.CanDoPaging;
 
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeePaging implements CanBePaged {
+public class EmployeePaging implements CanDoPaging {
     private int pageNumber = 0;
     private int pageSize = 10;
     private Sort.Direction sortDirection = Sort.Direction.ASC;

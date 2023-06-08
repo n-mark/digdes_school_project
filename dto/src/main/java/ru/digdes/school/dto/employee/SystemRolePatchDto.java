@@ -1,14 +1,14 @@
 package ru.digdes.school.dto.employee;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.digdes.school.model.employee.Employee;
 import ru.digdes.school.model.employee.RoleInSystem;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class SystemRolePatchDto {
     private Long id;
     private RoleInSystem roleInSystem;

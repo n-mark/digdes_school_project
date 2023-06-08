@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.digdes.school.dao.repository.EmployeeRepository;
 import ru.digdes.school.dao.repository.specifications.SpecificationFiltering;
-import ru.digdes.school.dto.CanBePaged;
-import ru.digdes.school.dto.CanFilter;
+import ru.digdes.school.dto.CanDoPaging;
+import ru.digdes.school.dto.CanDoFiltering;
 import ru.digdes.school.dto.Stateable;
 import ru.digdes.school.dto.employee.DeleteEmployeeDto;
 import ru.digdes.school.dto.employee.EmployeeDto;
@@ -65,7 +65,7 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
     }
 
     @Override
-    public Page<EmployeeDto> search(CanBePaged pagingObject, CanFilter filteringObject) {
+    public Page<EmployeeDto> search(CanDoPaging pagingObject, CanDoFiltering filteringObject) {
         EmployeeFilterObject employeeFilterObject = (EmployeeFilterObject) filteringObject;
         String[] keyWords = employeeFilterObject.getSearchString().orElse("").split(" ");
 

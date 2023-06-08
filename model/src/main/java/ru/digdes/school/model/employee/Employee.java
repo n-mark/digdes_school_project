@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 @Entity
 public class Employee {
     @Id
@@ -35,5 +36,6 @@ public class Employee {
     private RoleInSystem roleInSystem;
     @ManyToMany(mappedBy = "team")
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Project> projects = new ArrayList<>();
 }
