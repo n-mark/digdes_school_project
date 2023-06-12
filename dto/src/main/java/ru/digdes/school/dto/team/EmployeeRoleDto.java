@@ -2,6 +2,7 @@ package ru.digdes.school.dto.team;
 
 import lombok.*;
 import ru.digdes.school.dto.employee.IdFullNameEmployeeDto;
+import ru.digdes.school.model.team.RoleInProject;
 
 @Getter
 @Setter
@@ -10,5 +11,5 @@ import ru.digdes.school.dto.employee.IdFullNameEmployeeDto;
 @Builder
 public class EmployeeRoleDto {
     private IdFullNameEmployeeDto employee;
-    private String roleInProject;
+    private RoleInProject roleInProject;
 }

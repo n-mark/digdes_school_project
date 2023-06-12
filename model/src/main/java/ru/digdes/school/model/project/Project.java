@@ -3,6 +3,7 @@ package ru.digdes.school.model.project;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.digdes.school.model.employee.Employee;
+import ru.digdes.school.model.task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,5 +27,9 @@ public class Project {
     @JoinTable(name = "project_employee_role",
                 joinColumns = @JoinColumn(name = "project_id"),
                 inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    @ToString.Exclude
     private List<Employee> team = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    private List<Task> tasks;
 }

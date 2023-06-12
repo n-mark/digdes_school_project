@@ -4,6 +4,7 @@ package ru.digdes.school.model.task;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.digdes.school.model.employee.Employee;
+import ru.digdes.school.model.project.Project;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Task {
     private Long id;
     private String taskName;
     private String description;
-    @OneToOne
+    @ManyToOne
     private Employee responsible;
     private Integer amountOfHoursNeeded;
     private LocalDateTime deadline;
@@ -41,4 +42,8 @@ public class Task {
 
     @ManyToMany(mappedBy = "dependsOn")
     private List<Task> dependentTasks;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 }

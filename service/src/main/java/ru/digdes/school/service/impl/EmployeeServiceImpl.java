@@ -21,8 +21,12 @@ import ru.digdes.school.exception.EmployeeDeletedException;
 import ru.digdes.school.mapping.Mapper;
 import ru.digdes.school.model.employee.Employee;
 import ru.digdes.school.model.employee.EmployeeStatus;
+import ru.digdes.school.model.project.Project;
 import ru.digdes.school.service.BasicService;
 import ru.digdes.school.service.GetService;
+import ru.digdes.school.service.ProjectEmployeeRoleService;
+
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
@@ -30,13 +34,16 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
     private final EmployeeRepository employeeRepository;
     private final Mapper<Employee, EmployeeDto> mapper;
     private final SpecificationFiltering<Employee> specificationFiltering;
+    private final ProjectEmployeeRoleService projectEmployeeRoleService;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository,
                                Mapper<Employee, EmployeeDto> mapper,
-                               SpecificationFiltering<Employee> specificationFiltering) {
+                               SpecificationFiltering<Employee> specificationFiltering,
+                               ProjectEmployeeRoleService projectEmployeeRoleService) {
         this.employeeRepository = employeeRepository;
         this.mapper = mapper;
         this.specificationFiltering = specificationFiltering;
+        this.projectEmployeeRoleService = projectEmployeeRoleService;
     }
 
     @Override
@@ -51,7 +58,7 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
     @Transactional
     public EmployeeDto update(EmployeeDto updateFrom) {
         if (!employeeRepository.existsById(updateFrom.getId())) {
-            throw new EntityNotFoundException("An employee with id = " + updateFrom.getId() + " doesn't exist");
+            throw new EntityNotFoundException("The employee with id = " + updateFrom.getId() + " doesn't exist");
         }
 
         Employee employee = employeeRepository.getReferenceById(updateFrom.getId());
@@ -92,6 +99,18 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
             throw new EmployeeDeletedException("The employee with id = " + deleteEmployeeDto.getId()
                     + " status is already 'DELETED'");
         }
+
+        List<Long> projectsIds = employee.getProjects().stream()
+                .map(Project::getId)
+                .toList();
+
+        try {
+            projectsIds.forEach(projectId ->
+                    projectEmployeeRoleService.deleteTeamMember(projectId, deleteEmployeeDto.getId()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Can't set employee status to 'DELETED': " + e.getMessage());
+        }
+
         employee.setStatus(EmployeeStatus.DELETED);
         employeeRepository.save(employee);
         return "The employee with id = " + deleteEmployeeDto.getId() + " status has been set to 'DELETED'";
@@ -124,6 +143,7 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public SystemRolePatchDto changeSystemRole(SystemRolePatchDto systemRolePatchDto) {
         if (!employeeRepository.existsById(systemRolePatchDto.getId())) {
             throw new EntityNotFoundException("An employee with id = " + systemRolePatchDto.getId() + " doesn't exist");
