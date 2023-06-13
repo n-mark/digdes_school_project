@@ -1,13 +1,13 @@
 version: "3"
 services:
-#  containerdb:
-#    image: postgres
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      POSTGRES_USER: user
-#      POSTGRES_PASSWORD: password
-#      POSTGRES_DB: digdes-school-proj
+  containerdb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: digdes-school-proj
   rabbitmq:
     image: rabbitmq:management
     ports:
@@ -19,12 +19,12 @@ services:
     volumes:
       - ./rabbitmq/data:/var/lib/rabbitmq
 
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - 8080:8080
-#    depends_on:
-#      - containerdb
-#      - rabbitmq
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - containerdb
+      - rabbitmq

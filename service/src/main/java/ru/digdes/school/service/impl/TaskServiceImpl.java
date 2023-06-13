@@ -20,6 +20,7 @@ import ru.digdes.school.dto.project.IdNameProjectDto;
 import ru.digdes.school.dto.task.ChangeTaskStateDto;
 import ru.digdes.school.dto.task.TaskDto;
 import ru.digdes.school.dto.task.TaskFilterObject;
+import ru.digdes.school.email.EmailMessage;
 import ru.digdes.school.email.EmailService;
 import ru.digdes.school.mapping.Mapper;
 import ru.digdes.school.model.employee.Employee;
@@ -30,6 +31,7 @@ import ru.digdes.school.security.UserDetailsImpl;
 import ru.digdes.school.service.BasicService;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class TaskServiceImpl implements BasicService<TaskDto> {
@@ -209,9 +211,23 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
         if (taskDto.getResponsible() != null) {
             Employee employee = employeeRepository.getReferenceById(taskDto.getResponsible().getId());
             if (employee.getEmail() != null) {
-                String subject = "Hello";
-                String message = "This is the test email";
-                emailService.sendEmailAsync(employee.getEmail(), subject, message);
+                EmailMessage emailMessage = EmailMessage.builder()
+                        .employeeName(employee.getName())
+                        .email(employee.getEmail())
+                        .subject("Новая задача")
+                        .message("")
+                        .taskName(task.getTaskName())
+                        .projectName(task.getProject().getProjectName())
+                        .deadlineDate(task.getDeadline().toLocalDate().toString())
+                        .deadlineTime(task.getDeadline().toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString())
+                        .build();
+                if (taskDto.getTestEmail() != null) {
+                    String employeeEmail = emailMessage.getEmail();
+                    emailMessage.setEmail(taskDto.getTestEmail());
+                    emailMessage.setSubject("Test email sending");
+                    emailMessage.setMessage("(This is a test email sending for " + employeeEmail + ")");
+                }
+                emailService.sendEmailAsync(emailMessage);
             }
         }
     }

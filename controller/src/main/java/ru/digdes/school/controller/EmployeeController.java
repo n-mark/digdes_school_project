@@ -54,7 +54,7 @@ public class EmployeeController {
     @Operation(description = "Изменить данные сотрудника")
     @PatchMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> updateEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(employeeService.update(employeeDto));
     }

@@ -1,5 +1,6 @@
 package ru.digdes.school.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,13 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskDto> create(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> create(@Valid @RequestBody TaskDto taskDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(taskService.create(taskDto));
     }
 
     @PatchMapping
-    public ResponseEntity<TaskDto> update(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> update(@Valid @RequestBody TaskDto taskDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(taskService.update(taskDto));
     }

@@ -13,8 +13,7 @@ public class EmailService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendEmailAsync(String recipient, String subject, String message) {
-        EmailMessage emailMessage = new EmailMessage(recipient, subject, message);
+    public void sendEmailAsync(EmailMessage emailMessage) {
         rabbitTemplate.convertAndSend("q.email-sending", emailMessage);
     }
 }
