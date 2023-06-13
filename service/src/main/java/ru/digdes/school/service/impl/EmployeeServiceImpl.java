@@ -100,15 +100,17 @@ public class EmployeeServiceImpl implements BasicService<EmployeeDto>,
                     + " status is already 'DELETED'");
         }
 
-        List<Long> projectsIds = employee.getProjects().stream()
-                .map(Project::getId)
-                .toList();
+        if (employee.getProjects() != null) {
+            List<Long> projectsIds = employee.getProjects().stream()
+                    .map(Project::getId)
+                    .toList();
 
-        try {
-            projectsIds.forEach(projectId ->
-                    projectEmployeeRoleService.deleteTeamMember(projectId, deleteEmployeeDto.getId()));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Can't set employee status to 'DELETED': " + e.getMessage());
+            try {
+                projectsIds.forEach(projectId ->
+                        projectEmployeeRoleService.deleteTeamMember(projectId, deleteEmployeeDto.getId()));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Can't set employee status to 'DELETED': " + e.getMessage());
+            }
         }
 
         employee.setStatus(EmployeeStatus.DELETED);

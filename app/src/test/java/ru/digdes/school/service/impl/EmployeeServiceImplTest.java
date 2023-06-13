@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -24,6 +23,7 @@ import ru.digdes.school.model.employee.RoleInSystem;
 
 import java.util.Collections;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +59,7 @@ class EmployeeServiceImplTest {
 
     @Test
     void checkCreate() {
-        when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(employee);
+        when(employeeRepository.save(any(Employee.class))).thenReturn(employee);
         EmployeeDto returnedEmplDto = employeeServiceImpl.create(employeeDto);
         Assertions.assertThat(returnedEmplDto).isEqualTo(employeeDto);
     }
@@ -82,7 +82,7 @@ class EmployeeServiceImplTest {
 
         when(employeeRepository.existsById(updateId)).thenReturn(true);
         when(employeeRepository.getReferenceById(updateId)).thenReturn(employee);
-        when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(updatedEmployee);
+        when(employeeRepository.save(any(Employee.class))).thenReturn(updatedEmployee);
 
         EmployeeDto updatedEmployeeDtoOutput = employeeServiceImpl.update(updatedEmployeeDtoInput);
 
@@ -96,7 +96,7 @@ class EmployeeServiceImplTest {
         EmployeeFilterObject employeeFilterObject = new EmployeeFilterObject();
         employeeFilterObject.setSearchString("testString");
 
-        when(employeeRepository.findAll(Mockito.any(Specification.class), Mockito.any(Pageable.class))).thenReturn(employeePage);
+        when(employeeRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(employeePage);
 
         Page<EmployeeDto> employeeDtos = employeeServiceImpl.search(employeePaging, employeeFilterObject);
 
@@ -119,7 +119,7 @@ class EmployeeServiceImplTest {
                 .build();
         setToDeleted.setStatus(EmployeeStatus.DELETED);
 
-        when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(setToDeleted);
+        when(employeeRepository.save(any(Employee.class))).thenReturn(setToDeleted);
 
 
         Assertions.assertThat(employeeServiceImpl.changeState(deleteEmployeeDto))
@@ -160,7 +160,7 @@ class EmployeeServiceImplTest {
 
         when(employeeRepository.existsById(systemRolePatchDto.getId())).thenReturn(true);
         when(employeeRepository.getReferenceById(systemRolePatchDto.getId())).thenReturn(employee);
-        when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(changedRole);
+        when(employeeRepository.save(any(Employee.class))).thenReturn(changedRole);
 
         Assertions.assertThat(employeeServiceImpl.changeSystemRole(systemRolePatchDto)).isEqualTo(systemRolePatchDto);
     }

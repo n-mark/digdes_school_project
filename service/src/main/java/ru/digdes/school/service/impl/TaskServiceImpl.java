@@ -20,6 +20,7 @@ import ru.digdes.school.dto.project.IdNameProjectDto;
 import ru.digdes.school.dto.task.ChangeTaskStateDto;
 import ru.digdes.school.dto.task.TaskDto;
 import ru.digdes.school.dto.task.TaskFilterObject;
+import ru.digdes.school.email.EmailService;
 import ru.digdes.school.mapping.Mapper;
 import ru.digdes.school.model.employee.Employee;
 import ru.digdes.school.model.employee.EmployeeStatus;
@@ -37,17 +38,20 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
     private final ProjectRepository projectRepository;
     private final Mapper<Task, TaskDto> mapper;
     private final SpecificationFiltering<Task> specificationFiltering;
+    private final EmailService emailService;
 
     public TaskServiceImpl(EmployeeRepository employeeRepository,
                            TaskRepository taskRepository,
                            ProjectRepository projectRepository,
                            Mapper<Task, TaskDto> mapper,
-                           SpecificationFiltering<Task> specificationFiltering) {
+                           SpecificationFiltering<Task> specificationFiltering,
+                           EmailService emailService) {
         this.employeeRepository = employeeRepository;
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.mapper = mapper;
         this.specificationFiltering = specificationFiltering;
+        this.emailService = emailService;
     }
 
     @Override
@@ -91,11 +95,11 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
         Task task = mapper.dtoToModel(createFrom);
 
         TaskDto taskDto = mapper.modelToDto(taskRepository.save(task));
+        sendEmailIfExists(createFrom, task);
 
-        //TODO: проверить, есть ли email у установленного исполнителем сотрудника. Если да - отправить уведомление.
-        System.out.println();
         return taskDto;
     }
+
 
     @Override
     @Transactional
@@ -128,8 +132,10 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
                     " or to increase the deadline date");
         }
 
-        //TODO: проверить, есть ли email у установленного исполнителем сотрудника. Если да - отправить уведомление.
-        return mapper.modelToDto(taskRepository.save(task));
+        TaskDto toReturn = mapper.modelToDto(taskRepository.save(task));
+        sendEmailIfExists(updateFrom, task);
+
+        return toReturn;
     }
 
     @Override
@@ -198,4 +204,16 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
                     "because he is not a participant of the project with id = " + taskDto.getProject().getId());
         }
     }
+
+    private void sendEmailIfExists(TaskDto taskDto, Task task) {
+        if (taskDto.getResponsible() != null) {
+            Employee employee = employeeRepository.getReferenceById(taskDto.getResponsible().getId());
+            if (employee.getEmail() != null) {
+                String subject = "Hello";
+                String message = "This is the test email";
+                emailService.sendEmailAsync(employee.getEmail(), subject, message);
+            }
+        }
+    }
+
 }

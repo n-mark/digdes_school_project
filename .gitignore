@@ -19,3 +19,5 @@
 /target/
 /datastorage/
 /logs/
+/app/logs/
+/rabbitmq/
