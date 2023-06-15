@@ -17,9 +17,7 @@ import ru.digdes.school.dto.CanDoPaging;
 import ru.digdes.school.dto.Stateable;
 import ru.digdes.school.dto.employee.IdFullNameEmployeeDto;
 import ru.digdes.school.dto.project.IdNameProjectDto;
-import ru.digdes.school.dto.task.ChangeTaskStateDto;
-import ru.digdes.school.dto.task.TaskDto;
-import ru.digdes.school.dto.task.TaskFilterObject;
+import ru.digdes.school.dto.task.*;
 import ru.digdes.school.email.EmailMessage;
 import ru.digdes.school.email.EmailService;
 import ru.digdes.school.mapping.Mapper;
@@ -32,6 +30,8 @@ import ru.digdes.school.service.BasicService;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TaskServiceImpl implements BasicService<TaskDto> {
@@ -177,6 +177,95 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
         task.setTaskStatus(changeTaskStateDto.getTaskStatus());
         taskRepository.save(task);
         return "The task with id = " + task.getId() + " status were successfully changed to " + task.getTaskStatus();
+    }
+
+    @Transactional
+    public String linkTasks(Long dependent, Long dependsOn) {
+        if (!taskRepository.existsById(dependent)) {
+            throw new IllegalArgumentException("The task with id = " + dependent + " doesn't exist");
+        }
+        if (!taskRepository.existsById(dependsOn)) {
+            throw new IllegalArgumentException("The task with id = " + dependsOn + " doesn't exist");
+        }
+
+        if (dependent == dependsOn) {
+            throw new IllegalArgumentException("Can't link the task to itself");
+        }
+
+        Task dependentTask = taskRepository.getReferenceById(dependent);
+        Task dependsOnTask = taskRepository.getReferenceById(dependsOn);
+
+        if (dependentTask.getProject().getId() != dependsOnTask.getProject().getId()) {
+            throw new IllegalArgumentException("Can't link the tasks because they don't belong to the same project");
+        }
+
+        dependsOnTask.getDependentTasks().add(dependentTask);
+        dependentTask.getDependsOn().add(dependsOnTask);
+
+        return "The tasks with id = " + dependent + " and id = " + dependsOn + " has been linked successfully";
+    }
+
+    public TaskDependencyDto getAllRelatedTasks(Long taskId, boolean allParents, boolean allChildren) {
+        if (!taskRepository.existsById(taskId)) {
+            throw new IllegalArgumentException("The task with id = " + taskId + " doesn't exist");
+        }
+
+        TaskDependencyDto td = new TaskDependencyDto();
+        Task task = taskRepository.getReferenceById(taskId);
+        td.setTask(new IdNameTaskDto(task.getId(), task.getTaskName()));
+
+        if (allParents) {
+            List<Task> dependsOn = getAllParents(taskId);
+            td.setParents(dependsOn.stream()
+                    .map(t -> new IdNameTaskDto(t.getId(), t.getTaskName()))
+                    .toList());
+        } else {
+            td.setParents(task.getDependsOn().stream()
+                    .map(t -> new IdNameTaskDto(t.getId(), t.getTaskName()))
+                    .toList());
+        }
+
+        if (allChildren) {
+            List<Task> dependentTasks = getAllChildren(taskId);
+            td.setChildren(dependentTasks.stream()
+                    .map(t -> new IdNameTaskDto(t.getId(), t.getTaskName()))
+                    .toList());
+        } else {
+            td.setChildren(task.getDependentTasks().stream()
+                    .map(t -> new IdNameTaskDto(t.getId(), t.getTaskName()))
+                    .toList());
+        }
+
+        return td;
+    }
+
+    private List<Task> getAllChildren(Long id) {
+        List<Task> children = new ArrayList<>();
+        Task task = taskRepository.getReferenceById(id);
+        children.addAll(task.getDependentTasks());
+
+        List<Task> subChildren = new ArrayList<>();
+        for (Task task1 : children) {
+            subChildren.addAll(getAllChildren(task1.getId()));
+        }
+        children.addAll(subChildren);
+
+        return children;
+    }
+
+
+    private List<Task> getAllParents(Long id) {
+        List<Task> parents = new ArrayList<>();
+        Task task = taskRepository.getReferenceById(id);
+        parents.addAll(task.getDependsOn());
+
+        List<Task> subParents = new ArrayList<>();
+        for (Task task1 : parents) {
+            subParents.addAll(getAllParents(task1.getId()));
+        }
+        parents.addAll(subParents);
+
+        return parents;
     }
 
     private UserDetailsImpl checkTheCurrentAuthenticated(TaskDto taskDto) {

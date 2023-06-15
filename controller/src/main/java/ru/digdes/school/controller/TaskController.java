@@ -8,14 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.digdes.school.dto.file.ProjectFilesDto;
 import ru.digdes.school.dto.file.TaskFilesDto;
-import ru.digdes.school.dto.task.ChangeTaskStateDto;
-import ru.digdes.school.dto.task.TaskDto;
-import ru.digdes.school.dto.task.TaskFilterObject;
-import ru.digdes.school.dto.task.TaskPaging;
+import ru.digdes.school.dto.task.*;
 import ru.digdes.school.service.BasicService;
 import ru.digdes.school.service.FileService;
+import ru.digdes.school.service.impl.TaskServiceImpl;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -60,7 +57,7 @@ public class TaskController {
     public ResponseEntity<TaskFilesDto> uploadFiles(@PathVariable Long taskId,
                                                     @RequestParam("files") MultipartFile[] files) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body((TaskFilesDto)fileService.upload(taskId, files, INVOKER));
+                .body((TaskFilesDto) fileService.upload(taskId, files, INVOKER));
     }
 
     @GetMapping("files/{taskId}/{filename:.+}")
@@ -74,5 +71,18 @@ public class TaskController {
     @GetMapping("files/{taskId}")
     public ResponseEntity<TaskFilesDto> getFilesList(@PathVariable Long taskId) {
         return ResponseEntity.ok((TaskFilesDto) fileService.getListOfFiles(taskId, INVOKER));
+    }
+
+    @PostMapping("/relation")
+    public ResponseEntity<String> linkTasks(@RequestParam Long dependent,
+                                            @RequestParam Long dependsOn) {
+        return ResponseEntity.ok(((TaskServiceImpl) taskService).linkTasks(dependent, dependsOn));
+    }
+
+    @GetMapping("/relation/{id}")
+    public ResponseEntity<TaskDependencyDto> getTaskRelations(@PathVariable Long id,
+                                                              @RequestParam(required = false) boolean allParents,
+                                                              @RequestParam(required = false) boolean allChildren) {
+        return ResponseEntity.ok(((TaskServiceImpl) taskService).getAllRelatedTasks(id, allParents, allChildren));
     }
 }

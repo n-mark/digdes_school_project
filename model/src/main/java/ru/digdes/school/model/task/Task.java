@@ -9,6 +9,7 @@ import ru.digdes.school.model.file.TaskFile;
 import ru.digdes.school.model.project.Project;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -43,12 +44,13 @@ public class Task {
     private List<Task> dependsOn;
 
     @ManyToMany(mappedBy = "dependsOn")
-    private List<Task> dependentTasks;
+    @Column(name = "dependent_task_id")
+    private List<Task> dependentTasks = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
     @OneToMany(mappedBy = "task")
-    private List<TaskFile> files;
+    private List<TaskFile> files = new ArrayList<>();
 }
