@@ -4,6 +4,8 @@ package ru.digdes.school.model.task;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.digdes.school.model.employee.Employee;
+import ru.digdes.school.model.file.ProjectFile;
+import ru.digdes.school.model.file.TaskFile;
 import ru.digdes.school.model.project.Project;
 
 import java.time.LocalDateTime;
@@ -46,4 +48,7 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @OneToMany(mappedBy = "task")
+    private List<TaskFile> files;
 }

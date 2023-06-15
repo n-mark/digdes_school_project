@@ -3,6 +3,7 @@ package ru.digdes.school.model.project;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.digdes.school.model.employee.Employee;
+import ru.digdes.school.model.file.ProjectFile;
 import ru.digdes.school.model.task.Task;
 
 import java.util.ArrayList;
@@ -32,4 +33,6 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
+    @OneToMany(mappedBy = "project")
+    private List<ProjectFile> files;
 }
