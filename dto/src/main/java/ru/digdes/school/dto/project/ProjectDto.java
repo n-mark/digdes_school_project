@@ -10,6 +10,7 @@ import ru.digdes.school.model.project.ProjectStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class ProjectDto {
     private Long id;
     private String projectCode;

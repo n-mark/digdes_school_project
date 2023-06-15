@@ -41,19 +41,22 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
     private final Mapper<Task, TaskDto> mapper;
     private final SpecificationFiltering<Task> specificationFiltering;
     private final EmailService emailService;
+    private final GetAuthenticatedService getAuthenticatedService;
 
     public TaskServiceImpl(EmployeeRepository employeeRepository,
                            TaskRepository taskRepository,
                            ProjectRepository projectRepository,
                            Mapper<Task, TaskDto> mapper,
                            SpecificationFiltering<Task> specificationFiltering,
-                           EmailService emailService) {
+                           EmailService emailService,
+                           GetAuthenticatedService getAuthenticatedService) {
         this.employeeRepository = employeeRepository;
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.mapper = mapper;
         this.specificationFiltering = specificationFiltering;
         this.emailService = emailService;
+        this.getAuthenticatedService = getAuthenticatedService;
     }
 
     @Override
@@ -68,7 +71,7 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
                     createFrom.getProject().getId() + " because the project doesn't exist");
         }
 
-        UserDetailsImpl userDetails = checkTheCurrentAuthenticated(createFrom);
+        UserDetailsImpl userDetails = getAuthenticatedService.checkTheCurrentAuthenticated(createFrom);
 
         if (createFrom.getTaskName() == null) {
             throw new IllegalArgumentException("Task name cannot be null");
@@ -113,7 +116,7 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
 
         Task task = taskRepository.getReferenceById(updateFrom.getId());
         updateFrom.setProject(IdNameProjectDto.builder().id(task.getProject().getId()).build());
-        UserDetailsImpl userDetails = checkTheCurrentAuthenticated(mapper.modelToDto(task));
+        UserDetailsImpl userDetails = getAuthenticatedService.checkTheCurrentAuthenticated(mapper.modelToDto(task));
 
         if (updateFrom.getResponsible() != null) {
             checkResponsibleEmployee(updateFrom);
@@ -166,7 +169,7 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
         }
 
         Task task = taskRepository.getReferenceById(changeTaskStateDto.getId());
-        checkTheCurrentAuthenticated(mapper.modelToDto(task));
+        getAuthenticatedService.checkTheCurrentAuthenticated(mapper.modelToDto(task));
 
         if (task.getTaskStatus().compareTo(changeTaskStateDto.getTaskStatus()) >= 0) {
             throw new IllegalArgumentException("Wrong assignment. The task with status '" + task.getTaskStatus() +
@@ -268,16 +271,16 @@ public class TaskServiceImpl implements BasicService<TaskDto> {
         return parents;
     }
 
-    private UserDetailsImpl checkTheCurrentAuthenticated(TaskDto taskDto) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        Employee createdBy = employeeRepository.getReferenceById(userDetails.getId());
-        if (createdBy.getProjects().stream().noneMatch(project -> project.getId() == taskDto.getProject().getId())) {
-            throw new IllegalArgumentException("You're not allowed to add/modify a task on the project with id = " +
-                    taskDto.getProject().getId() + " because you're not the participant of this project");
-        }
-        return userDetails;
-    }
+//    private UserDetailsImpl checkTheCurrentAuthenticated(TaskDto taskDto) {
+//        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+//                .getPrincipal();
+//        Employee createdBy = employeeRepository.getReferenceById(userDetails.getId());
+//        if (createdBy.getProjects().stream().noneMatch(project -> project.getId() == taskDto.getProject().getId())) {
+//            throw new IllegalArgumentException("You're not allowed to add/modify a task on the project with id = " +
+//                    taskDto.getProject().getId() + " because you're not the participant of this project");
+//        }
+//        return userDetails;
+//    }
 
     private void checkResponsibleEmployee(TaskDto taskDto) {
         if (taskDto.getResponsible().getId() != null &&

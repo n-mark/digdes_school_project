@@ -12,6 +12,7 @@ import lombok.*;
 @Entity
 @Table(name = "project_employee_role")
 @ToString
+@EqualsAndHashCode
 public class ProjectEmployeeRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

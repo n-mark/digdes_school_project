@@ -18,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,16 +42,20 @@ public class Task {
             joinColumns = @JoinColumn(name = "dependent_task_id"),
             inverseJoinColumns = @JoinColumn(name = "depends_on_id")
     )
+    @EqualsAndHashCode.Exclude
     private List<Task> dependsOn;
 
     @ManyToMany(mappedBy = "dependsOn")
     @Column(name = "dependent_task_id")
+    @EqualsAndHashCode.Exclude
     private List<Task> dependentTasks = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @EqualsAndHashCode.Exclude
     private Project project;
 
     @OneToMany(mappedBy = "task")
+    @EqualsAndHashCode.Exclude
     private List<TaskFile> files = new ArrayList<>();
 }
