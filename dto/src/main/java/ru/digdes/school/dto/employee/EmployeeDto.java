@@ -13,6 +13,7 @@ import ru.digdes.school.model.employee.Position;
 @AllArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode
 public class EmployeeDto {
     @Schema(description = "Идентификатор сотрудника")
     private Long id;

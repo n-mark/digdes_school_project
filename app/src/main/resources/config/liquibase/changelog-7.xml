@@ -1,0 +1,12 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="nikita_m"  id="addNotNullConstraint-project_id">
+        <addNotNullConstraint columnDataType="bigint"
+                              columnName="project_id"
+                              constraintName="project_not_null"
+                              schemaName="public"
+                              tableName="task"/>
+    </changeSet>
+</databaseChangeLog>

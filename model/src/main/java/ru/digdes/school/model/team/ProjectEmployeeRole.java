@@ -3,8 +3,6 @@ package ru.digdes.school.model.team;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.digdes.school.model.employee.Employee;
-import ru.digdes.school.model.project.Project;
 
 @Builder
 @AllArgsConstructor
@@ -14,17 +12,16 @@ import ru.digdes.school.model.project.Project;
 @Entity
 @Table(name = "project_employee_role")
 @ToString
+@EqualsAndHashCode
 public class ProjectEmployeeRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+    @Column(name = "project_id")
+    private Long projectId;
+    @Column(name = "employee_id")
+    private Long employeeId;
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private RoleInProject roleInProject;

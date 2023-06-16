@@ -1,0 +1,33 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="nikita_m" id="addNotNullConstraint-role">
+        <addNotNullConstraint columnDataType="varchar"
+                              columnName="role"
+                              constraintName="role_not_null"
+                              schemaName="public"
+                              tableName="project_employee_role"/>
+    </changeSet>
+    <changeSet author="nikita_m" id="addCheckConstraint-role_in_project">
+        <sql>
+            ALTER TABLE project_employee_role
+                ADD CONSTRAINT verify_role CHECK (role in ('CHIEF', 'ANALYST', 'DEVELOPER', 'TESTER'));
+        </sql>
+    </changeSet>
+    <changeSet author="nikita_m" id="addAllMissingCheckConstraints">
+        <sql>
+            ALTER TABLE employee
+                ADD CONSTRAINT verify_position CHECK (position in ('INTERN', 'JUNIOR', 'MIDDLE', 'SENIOR', 'CHIEF'));
+            ALTER TABLE employee
+                ADD CONSTRAINT verify_job_title CHECK (job_title in ('ACCOUNTANT', 'MANAGER', 'SOFTWARE_DEVELOPER', 'TESTER'));
+            ALTER TABLE employee
+                ADD CONSTRAINT verify_status CHECK (status in ('ACTIVE', 'DELETED'));
+            ALTER TABLE task
+                ADD CONSTRAINT verify_task_status CHECK (task_status in ('NEW', 'IN_WORK', 'FINISHED', 'CLOSED'));
+            ALTER TABLE project
+                ADD CONSTRAINT verify_proj_status
+                    check (project_status in ('DRAFT', 'IN_WORK', 'TESTING', 'COMPLETED'));
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -4,7 +4,7 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import ru.digdes.school.dto.CanFilter;
+import ru.digdes.school.dto.CanDoFiltering;
 import ru.digdes.school.model.employee.Employee;
 import ru.digdes.school.model.employee.EmployeeStatus;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class EmployeeSpecificationImpl implements SpecificationFiltering<Employee>{
     @Override
-    public Specification<Employee> withFilters(CanFilter filteringObject) {
+    public Specification<Employee> withFilters(CanDoFiltering filteringObject) {
         return (employee, cq, cb) ->
                 cb.equal(employee.get("status"), EmployeeStatus.ACTIVE);
     }

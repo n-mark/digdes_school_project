@@ -3,6 +3,7 @@ package ru.digdes.school.model.employee;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.digdes.school.model.project.Project;
+import ru.digdes.school.model.task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 @Entity
 public class Employee {
     @Id
@@ -35,5 +37,8 @@ public class Employee {
     private RoleInSystem roleInSystem;
     @ManyToMany(mappedBy = "team")
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Project> projects = new ArrayList<>();
+    @OneToMany(mappedBy = "responsible")
+    private List<Task> tasks = new ArrayList<>();
 }

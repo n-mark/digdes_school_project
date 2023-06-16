@@ -18,3 +18,7 @@
 /emailSender/.DS_Store
 /target/
 /datastorage/
+/logs/
+/app/logs/
+/rabbitmq/
+/files/
